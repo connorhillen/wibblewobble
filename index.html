@@ -1,0 +1,123 @@
+<html lang="en" ng-app="StarterApp">
+
+<head>
+  <meta name="viewport" content="initial-scale=1" />
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0-rc1/angular-material.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body layout="column" layout-align="start center" flex ng-controller="AppController as vm">
+  <md-toolbar layout="row">
+    <div class="md-toolbar-tools">
+      <h1>Time Test</h1>
+    </div>
+  </md-toolbar>
+  <div layout="row" flex="80">
+    <div layout="column" flex>
+      <!-- Settings // Home -->
+        <md-content ng-show="vm.state.begin" layout="column" flex class="md-padding">
+          <!-- Sliders -->
+          <div layout>
+            <div flex="40" layout layout-align="center center">
+              <span class="md-body-1">Time to Test (ms)</span>
+            </div>
+            <md-slider flex min="1" max="300000" ng-model="vm.timeToTest" aria-label="time to test" id="time-slider" class>
+            </md-slider>
+            <div flex="20" layout layout-align="center center">
+              <input flex type="number" ng-model="vm.timeToTest" aria-label="time to test" aria-controls="time-slider">
+            </div>
+          </div>
+          
+          <p>Should the user be primed with 3 control times?</p>
+          <md-radio-group ng-model="vm.prime">
+            <md-radio-button value="yes" class="md-primary">Yes</md-radio-button>
+            <md-radio-button value="no">No</md-radio-button>
+          </md-radio-group>
+          
+          <p>Should the user be shown how close they were each test?</p>
+          <md-radio-group ng-model="vm.showTested">
+            <md-radio-button ng-value="true" class="md-primary">Yes</md-radio-button>
+            <md-radio-button ng-value="false">No</md-radio-button>
+          </md-radio-group>
+          
+         <md-button class="md-accent md-raised" ng-click="vm.begin()">Start Test</md-button>
+    
+        </md-content>
+  
+      
+      <!-- Training -->
+      <div ng-show="vm.state.inTraining" layout="column" flex>
+        <md-content layout="column" flex class="md-padding">
+          <div ng-show="vm.state.trainingInstructions" layout="column">
+            <p>You are in training mode. You will see the word READY? Appear on 
+              screen for a few seconds, followed by the word <strong>TIME</strong> for 
+              {{ ((vm.timeToTest / 1000) | number:2)*1 }} seconds. This will happen 3 times.
+            </p>
+            <div layout="row" layout-align="center center">
+              <md-button flex-gt-sm="50" flex="100" class="md-accent md-raised" ng-click="vm.continueTraining()">Continue</md-button>
+            </div>
+          </div>
+          
+          <div ng-hide="vm.state.trainingInstructions" layout="row" layout-align="center center">
+            <p ng-show="vm.ready" class="md-display-1">READY?</p>
+            <p ng-show="vm.time" class="md-display-3">TIME</p>
+          </div>
+        </md-content>
+      </div>
+      
+      <!-- Testing -->
+      <div ng-show="vm.state.inProgress" layout="column" flex>
+        <md-content layout="column" flex class="md-padding">
+          <div ng-show="vm.state.testInstructions" layout="column">
+            <p>You are now going to be performing the actual test.
+              Just like in the training, you will be shown READY? followed by the word <strong>TIME</strong>.
+              You will have to press the button when you think {{ ((vm.timeToTest / 1000) | number:2)*1 }} seconds
+              has elapsed, and the test will repeat. This will occur 3 times.
+            </p>
+            <div layout="row" layout-align="center center">
+              <md-button flex-gt-sm="50" flex="100" class="md-accent md-raised" ng-click="vm.startTest()">Begin</md-button>
+            </div>
+           </div>
+          <div ng-hide="vm.state.testInstructions" layout="row" layout-align="center center">
+            <div layout="column" ng-show="vm.ready" layout-align="center center">
+              <p class="md-display-1">READY?</p>
+              <p ng-show="vm.tested && vm.showTested && vm.currentTest.delta < 0">You were over by {{vm.currentTest.delta * -1}}ms.</p>
+              <p ng-show="vm.tested && vm.showTested && vm.currentTest.delta > 0">You were under by {{vm.currentTest.delta}}ms.</p>
+              <p ng-show="vm.tested && vm.showTested && vm.currentTest.delta === 0">You were exactly perfect.</p>
+            </div>
+            <div ng-show="vm.time" flex layout="column">
+              <p class="md-display-3">TIME</p>
+              <div layout="row" layout-align="center center">
+                <md-button flex-gt-sm="50" flex="100" ng-show="vm.time" class="md-accent md-raised" ng-click="vm.stopClock()">STOP!</md-button>
+              </div>
+            </div>
+          </div>
+        </md-content>
+      </div>
+      
+      <!-- Final -->
+      <div ng-show="vm.state.results" layout="column" flex>
+        <md-content layout="column" flex class="md-padding">
+          <h1>Results</h1>
+          <div layout="row" ng-repeat="test in vm.tests">
+            <p><strong>Test {{$index + 1}}:</strong> {{test.actual}}ms<p>
+          </div>
+          <div layout="row" layout-align="center center">
+            <md-button flex-gt-sm="50" flex="100" class="md-accent md-raised" ng-click="vm.restart()">New Test</md-button>
+          </div>
+        </md-content>
+      </div>
+      
+    </div>
+    </div>
+  <!-- Angular Material Dependencies -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-aria.min.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0-rc1/angular-material.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>
