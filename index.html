@@ -13,10 +13,20 @@
       <h1>Time Test</h1>
     </div>
   </md-toolbar>
-  <div layout="row" flex="80">
-    <div layout="column" flex>
+  <div layout="row" layout-align="center start" layout-fill>
+    <div layout="column" flex-gt-md="70">
       <!-- Settings // Home -->
-        <md-content ng-show="vm.state.begin" layout="column" flex class="md-padding">
+        <md-content ng-show="vm.state.begin" layout="column" layout-fill flex>     
+          <div layout="column">
+            <p>This is a simple testing application developed for TSES4014. It was built
+               for simplicity, but offers a little customization.</p>
+            <p>Because this is really simple, it doesn't actually persist any data, which means that
+               if you leave the page or refresh everything resets. It also only stores one test at a time,
+               so make sure you write down your numbers at the end.</p>
+            <p><strong>tl;dr</strong> Set up your settings, then it will (maybe) train (if you tell it to), 
+               perform the test, and then display the test times at the end. I suggest running through it
+               quickly to get a feel for it first.</p>
+          </div>
           <!-- Sliders -->
           <div layout>
             <div flex="40" layout layout-align="center center">
@@ -47,8 +57,7 @@
   
       
       <!-- Training -->
-      <div ng-show="vm.state.inTraining" layout="column" flex>
-        <md-content layout="column" flex class="md-padding">
+        <md-content ng-show="vm.state.inTraining" layout="column" layout-fill flex>     
           <div ng-show="vm.state.trainingInstructions" layout="column">
             <p>You are in training mode. You will see the word READY? Appear on 
               screen for a few seconds, followed by the word <strong>TIME</strong> for 
@@ -64,11 +73,9 @@
             <p ng-show="vm.time" class="md-display-3">TIME</p>
           </div>
         </md-content>
-      </div>
       
       <!-- Testing -->
-      <div ng-show="vm.state.inProgress" layout="column" flex>
-        <md-content layout="column" flex class="md-padding">
+        <md-content ng-show="vm.state.inProgress" layout="column" layout-fill flex>     
           <div ng-show="vm.state.testInstructions" layout="column">
             <p>You are now going to be performing the actual test.
               Just like in the training, you will be shown READY? followed by the word <strong>TIME</strong>.
@@ -86,7 +93,7 @@
               <p ng-show="vm.tested && vm.showTested && vm.currentTest.delta > 0">You were under by {{vm.currentTest.delta}}ms.</p>
               <p ng-show="vm.tested && vm.showTested && vm.currentTest.delta === 0">You were exactly perfect.</p>
             </div>
-            <div ng-show="vm.time" flex layout="column">
+            <div ng-show="vm.time" flex layout="column" layout-align="center center">
               <p class="md-display-3">TIME</p>
               <div layout="row" layout-align="center center">
                 <md-button flex-gt-sm="50" flex="100" ng-show="vm.time" class="md-accent md-raised" ng-click="vm.stopClock()">STOP!</md-button>
@@ -94,22 +101,20 @@
             </div>
           </div>
         </md-content>
-      </div>
       
       <!-- Final -->
-      <div ng-show="vm.state.results" layout="column" flex>
-        <md-content layout="column" flex class="md-padding">
-          <h1>Results</h1>
-          <div layout="row" ng-repeat="test in vm.tests">
-            <p><strong>Test {{$index + 1}}:</strong> {{test.actual}}ms<p>
+        <md-content ng-show="vm.state.results" layout="column" layout-align="start center" layout-fill flex> 
+          <div layout="column">    
+            <h1>Results</h1>
+            <div layout="row" ng-repeat="test in vm.tests">
+              <p><strong>Test {{$index + 1}}:</strong> {{test.actual}}ms<p>
+            </div>
           </div>
           <div layout="row" layout-align="center center">
             <md-button flex-gt-sm="50" flex="100" class="md-accent md-raised" ng-click="vm.restart()">New Test</md-button>
           </div>
         </md-content>
       </div>
-      
-    </div>
     </div>
   <!-- Angular Material Dependencies -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
