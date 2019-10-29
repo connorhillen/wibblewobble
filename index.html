@@ -16,7 +16,7 @@
   <div layout="row" layout-align="center start" layout-fill>
     <div layout="column" flex-gt-md="70">
       <!-- Settings // Home -->
-        <md-content ng-show="vm.state.begin" layout="column" layout-fill flex>     
+        <md-content ng-show="vm.state.begin" layout="column" layout-fill flex>
           <div layout="column">
             <p>This is a simple testing application developed for TSES4014. It was built
                for simplicity, but offers a little customization.</p>
@@ -38,49 +38,53 @@
               <input flex type="number" ng-model="vm.timeToTest" aria-label="time to test" aria-controls="time-slider">
             </div>
           </div>
-          
-          <p>Should the user be primed with 3 control times?</p>
-          <md-radio-group ng-model="vm.prime">
-            <md-radio-button value="yes" class="md-primary">Yes</md-radio-button>
-            <md-radio-button value="no">No</md-radio-button>
-          </md-radio-group>
-          
+
+          <p>How many control times should the user be primed with?</p>
+          <md-input-container>
+            <input flex type="number" aria-label="time to test" ng-model="vm.prime" required=true min="0" max="99" required>
+          </md-input-container>
+
+          <p>How many tests should be conducted?</p>
+          <md-input-container>
+            <input flex type="number" aria-label="time to test" ng-model="vm.numTests" required=true min="1" max="99" required>
+          </md-input-container>
+
           <p>Should the user be shown how close they were each test?</p>
           <md-radio-group ng-model="vm.showTested">
             <md-radio-button ng-value="true" class="md-primary">Yes</md-radio-button>
             <md-radio-button ng-value="false">No</md-radio-button>
           </md-radio-group>
-          
+
          <md-button class="md-accent md-raised" ng-click="vm.begin()">Start Test</md-button>
-    
+
         </md-content>
-  
-      
+
+
       <!-- Training -->
-        <md-content ng-show="vm.state.inTraining" layout="column" layout-fill flex>     
+        <md-content ng-show="vm.state.inTraining" layout="column" layout-fill flex>
           <div ng-show="vm.state.trainingInstructions" layout="column">
-            <p>You are in training mode. You will see the word READY? Appear on 
-              screen for a few seconds, followed by the word <strong>TIME</strong> for 
-              {{ ((vm.timeToTest / 1000) | number:2)*1 }} seconds. This will happen 3 times.
+            <p>You are in training mode. You will see the word READY? Appear on
+              screen for a few seconds, followed by the word <strong>TIME</strong> for
+              {{ ((vm.timeToTest / 1000) | number:2)*1 }} seconds. This will happen {{ vm.prime }} times.
             </p>
             <div layout="row" layout-align="center center">
               <md-button flex-gt-sm="50" flex="100" class="md-accent md-raised" ng-click="vm.continueTraining()">Continue</md-button>
             </div>
           </div>
-          
+
           <div ng-hide="vm.state.trainingInstructions" layout="row" layout-align="center center">
             <p ng-show="vm.ready" class="md-display-1">READY?</p>
             <p ng-show="vm.time" class="md-display-3">TIME</p>
           </div>
         </md-content>
-      
+
       <!-- Testing -->
-        <md-content ng-show="vm.state.inProgress" layout="column" layout-fill flex>     
+        <md-content ng-show="vm.state.inProgress" layout="column" layout-fill flex>
           <div ng-show="vm.state.testInstructions" layout="column">
             <p>You are now going to be performing the actual test.
               Just like in the training, you will be shown READY? followed by the word <strong>TIME</strong>.
               You will have to press the button when you think {{ ((vm.timeToTest / 1000) | number:2)*1 }} seconds
-              has elapsed, and the test will repeat. This will occur 3 times.
+              has elapsed, and the test will repeat. This will occur {{ vm.numTests }} times.
             </p>
             <div layout="row" layout-align="center center">
               <md-button flex-gt-sm="50" flex="100" class="md-accent md-raised" ng-click="vm.startTest()">Begin</md-button>
@@ -101,10 +105,10 @@
             </div>
           </div>
         </md-content>
-      
+
       <!-- Final -->
-        <md-content ng-show="vm.state.results" layout="column" layout-align="start center" layout-fill flex> 
-          <div layout="column">    
+        <md-content ng-show="vm.state.results" layout="column" layout-align="start center" layout-fill flex>
+          <div layout="column">
             <h1>Results</h1>
             <div layout="row" ng-repeat="test in vm.tests">
               <p><strong>Test {{$index + 1}}:</strong> {{test.actual}}ms<p>
